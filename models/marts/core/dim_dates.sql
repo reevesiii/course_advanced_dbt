@@ -3,7 +3,8 @@ WITH
 date_spine AS (
     
     SELECT DATEADD(DAY, SEQ4(), '2019-01-01')::DATE AS date_day
-    FROM TABLE(GENERATOR(ROWCOUNT => 365 * 10))  
+    FROM TABLE(GENERATOR(ROWCOUNT => 365 * 15))
+    WHERE date_day <= '2030-01-01'
     
 ),
 
