@@ -53,7 +53,7 @@ the user's phone number.
 {% enddocs %}
 
 {% docs bingeflix_user_deleted_at %}
-When the user's account was deleted. 
+When the user's account was deleted.
 {% enddocs %}
 
 {% docs bingeflix_username %}
