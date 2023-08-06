@@ -1,0 +1,25 @@
+macros:
+  - name: rolling_generalized_function
+    description: >-
+        This macro calculates a generalized rolling window function:
+        - the aggregation type (default = average)
+        - partition_by
+        - order by
+        - window period (default = 7)
+
+  - name: date_truncate
+    description: >-
+        This macro truncates a date, time or timestamp to the specified precision:
+        - date_column that is of type  date, time or timestamp
+        - date_part (default = month) Snowflake specific command (https://docs.snowflake.com/en/sql-reference/functions/date_trunc)
+          - year (y , yy , yyy , yyyy , yr , years , yrs)
+          - month (mm , mon , mons , months)
+          - day (d , dd , days, dayofmonth)
+          - dayofweek (weekday , dow , dw
+          - dayofweekiso (weekday_iso , dow_iso , dw_iso
+          - dayofyear (yearday , doy , dy
+          - week (w , wk , weekofyear , woy , wy
+          - weekiso (week_iso , weekofyeariso , weekofyear_iso
+          - quarter (q , qtr , qtrs , quarters
+          - yearofweek
+          - yearofweekiso
