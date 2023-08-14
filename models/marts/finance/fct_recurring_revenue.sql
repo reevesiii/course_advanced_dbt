@@ -1,4 +1,11 @@
 -- This model is created following the dbt MRR playbook: https://www.getdbt.com/blog/modeling-subscription-revenue/
+{{ config(materialized='table') }}
+
+
+{% set dim_subscriptions = ref('dim_subscriptions') %} -- This calls the macro we just wrote above, and returns our original source table, or our mock dataset, depending on the value of the unit_testing variable during dbt run
+{% set dim_dates = ref('dim_dates') %} -- This calls the macro we just wrote above, and returns our original source table, or our mock dataset, depending on the value of the unit_testing variable during dbt run
+
+
 
 WITH
 
@@ -12,10 +19,10 @@ monthly_subscriptions AS (
         ends_at,
         plan_name,
         pricing,
-        DATE({{ date_truncate('month', starts_at) }}) AS start_month,
-        DATE({{ date_truncate('month', ends_at) }}) AS end_month
+        DATE({{ date_truncate('starts_at') }}) AS start_month,
+        DATE({{ date_truncate('ends_at') }}) AS end_month
     FROM
-        {{ ref('dim_subscriptions') }}
+        {{ dim_subscriptions }}
     WHERE
         billing_period = 'monthly'
 ),
@@ -25,7 +32,7 @@ months AS (
     SELECT
         calendar_date AS date_month
     FROM
-        {{ ref('dim_dates') }}
+        {{ dim_dates }}
     WHERE
         day_of_month = 1
 ),
@@ -46,7 +53,7 @@ subscription_periods AS (
         -- For users who haven't ended their subscription yet (end_month is NULL) set the end_month to one month from the current date (these rows will be removed from the final CTE)
         CASE
             WHEN start_month = end_month THEN DATEADD('month', 1, end_month)
-            WHEN end_month IS NULL THEN DATE(DATEADD('month', 1, {{ date_truncate('month', CURRENT_DATE) }}))
+            WHEN end_month IS NULL THEN DATE(DATEADD('month', 1, {{ date_truncate('CURRENT_DATE()') }}))
             ELSE end_month
         END AS end_month
     FROM
@@ -198,7 +205,7 @@ final AS (
             ON subscription_periods.user_id = mrr_with_changes.user_id
                 AND subscription_periods.subscription_id = mrr_with_changes.subscription_id
     WHERE
-        date_month <= {{ date_truncate('month', CURRENT_DATE) }}
+        date_month <= {{ date_truncate('CURRENT_DATE()') }}
 )
 
 SELECT

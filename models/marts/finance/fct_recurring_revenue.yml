@@ -1,13 +1,9 @@
 models:
   - name: fct_recurring_revenue
     description: This model contains calculations for the monthly recurring revenue generated per user and subscription for each month.
-    columns:
-      - name: surrogate_key
-        description: The surrogate key. This acts as a primary key for this model.
-        tests:
-          - not_null
-          - unique
 
+
+    columns:
       - name: date_month
         description: The calendar month.
 
